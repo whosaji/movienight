@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+height:100vh;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Montserrat',sans-serif;
+color:white;
+background:#0b0610;
+position:relative;
+}
+
+/* Romantic animated glow background */
+body::before{
+content:"";
+position:absolute;
+inset:-30%;
+background:
+radial-gradient(circle at 30% 40%, rgba(255,0,120,0.6), transparent 60%),
+radial-gradient(circle at 70% 60%, rgba(255,40,140,0.4), transparent 60%);
+animation:romanticGlow 8s ease-in-out infinite alternate;
+filter:blur(120px);
+pointer-events:none;
+z-index:0;
+}
+
+@keyframes romanticGlow{
+0%{transform:scale(1);}
+100%{transform:scale(1.3);}
+}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+width:14px;height:14px;
+background:#ff2e88;
+transform:rotate(45deg);
+opacity:0.6;
+animation:float 12s linear infinite;
+pointer-events:none;
+z-index:0;
+}
+.heart::before,.heart::after{
+content:"";
+position:absolute;
+width:14px;height:14px;
+background:#ff2e88;
+border-radius:50%;
+}
+.heart::before{top:-7px;left:0;}
+.heart::after{left:-7px;top:0;}
+
+@keyframes float{
+from{transform:translateY(100vh) rotate(45deg) scale(.8);}
+to{transform:translateY(-15vh) rotate(45deg) scale(1.3);opacity:0;}
+}
+
+/* Screens */
+.screen{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+opacity:0;
+transform:scale(.95);
+transition:all 0.8s cubic-bezier(.22,1,.36,1);
+z-index:2;
+}
+
+.screen.active{
+opacity:1;
+transform:scale(1);
+}
+
+h1,h2,h3{
+font-family:'Cormorant Garamond',serif;
+font-size:2.2rem;
+margin-bottom:20px;
+text-shadow:0 0 25px rgba(255,0,120,.9);
+}
+
+p{
+margin-bottom:28px;
+font-size:1rem;
+opacity:.9;
+}
+
+/* Romantic glass buttons */
+.choice{
+padding:18px 28px;
+margin:14px 0;
+border-radius:40px;
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.2);
+cursor:pointer;
+transition:.4s ease;
+z-index:3;
+}
+
+.choice:hover{
+transform:scale(1.08);
+box-shadow:0 0 30px rgba(255,0,120,.8);
+}
+
+input{
+width:100%;
+max-width:320px;
+padding:14px;
+border-radius:30px;
+border:none;
+background:rgba(255,255,255,.08);
+color:white;
+text-align:center;
+margin:12px 0;
+font-size:1rem;
+box-shadow:0 0 20px rgba(255,0,120,.4);
+z-index:3;
+}
+</style>
+</head>
+
+<body>
+
+<script>
+/* Floating hearts generator */
+for(let i=0;i<25;i++){
+const h=document.createElement("div");
+h.className="heart";
+h.style.left=Math.random()*100+"vw";
+h.style.animationDuration=(8+Math.random()*6)+"s";
+document.body.appendChild(h);
+}
+</script>
+
+<!-- SCREEN 1 -->
+<div id="screen1" class="screen active">
+<h1>Buenos días, hermosa 💖</h1>
+<p>tap to continue</p>
+</div>
+
+<!-- SCREEN 2 -->
+<div id="screen2" class="screen">
+<h2>Random thought... 🤔</h2>
+<p>Let's watch a movie online together?</p>
+<div class="choice" id="noChoice">nahh, I'm cool on that</div>
+<div class="choice" onclick="goTo(3,event)">yess</div>
+</div>
+
+<!-- SCREEN 3 -->
+<div id="screen3" class="screen">
+<h2>Perfect 😌</h2>
+<p>Amma pick u up (virtually of course) at 7:50 p.m. (2/22/2026)</p>
+<div class="choice" onclick="goTo(4,event)">im not sure ill be available at that time</div>
+<div class="choice" onclick="confirmTime(event)">I'll be there</div>
+</div>
+
+<!-- SCREEN 4 -->
+<div id="screen4" class="screen">
+<h3>Okay 👀</h3>
+<p>What time works better on 2/22/2026?</p>
+<input type="time" onclick="event.stopPropagation()">
+<div class="choice" onclick="goTo(5,event)">Next</div>
+</div>
+
+<!-- SCREEN 5 -->
+<div id="screen5" class="screen">
+<h3>Not available that day?</h3>
+<p>Preferred day:</p>
+<input type="date" onclick="event.stopPropagation()">
+<p>Preferred time:</p>
+<input type="time" onclick="event.stopPropagation()">
+<div class="choice" onclick="finish(event)">Submit</div>
+</div>
+
+<script>
+let currentScreen = 1;
+
+/* FULL SCREEN TAP */
+document.addEventListener("click", function(){
+if(currentScreen === 1) goTo(2);
+});
+
+/* Screen change */
+function goTo(n, e){
+if(e) e.stopPropagation();
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById("screen"+n).classList.add("active");
+currentScreen = n;
+}
+
+/* Moving NO button */
+const noChoice=document.getElementById("noChoice");
+const screen2=document.getElementById("screen2");
+
+function moveChoice(){
+const rect=screen2.getBoundingClientRect();
+const cRect=noChoice.getBoundingClientRect();
+const maxX=rect.width-cRect.width;
+const maxY=rect.height-cRect.height;
+noChoice.style.position="absolute";
+noChoice.style.left=Math.random()*maxX+"px";
+noChoice.style.top=Math.random()*maxY+"px";
+}
+
+noChoice.addEventListener("mouseover",moveChoice);
+noChoice.addEventListener("click",function(e){e.stopPropagation();moveChoice();});
+noChoice.addEventListener("touchstart",function(e){e.stopPropagation();moveChoice();});
+
+function confirmTime(e){
+if(e) e.stopPropagation();
+alert("Locked in 💖");
+}
+
+function finish(e){
+if(e) e.stopPropagation();
+alert("Then it's a date 💘");
+}
+</script>
+
+</body>
+</html>
