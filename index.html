@@ -20,7 +20,6 @@ font-family:'Montserrat',sans-serif;
 color:white;
 background:#0b0610;
 position:relative;
-cursor:pointer;
 }
 
 /* Glow background */
@@ -41,7 +40,6 @@ z-index:0;
 100%{transform:scale(1.3);}
 }
 
-/* Screens */
 .screen{
 position:absolute;
 inset:0;
@@ -64,93 +62,113 @@ transform:scale(1);
 
 h1,h2{
 font-family:'Cormorant Garamond',serif;
-font-size:2.4rem;
+font-size:2.2rem;
 margin-bottom:20px;
 text-shadow:0 0 25px rgba(255,0,120,.9);
 }
 
 p{
 font-size:1.1rem;
-opacity:.9;
 margin-bottom:40px;
+max-width:600px;
 }
 
-/* Cutting-edge button */
+/* Moving button */
 .alt-btn{
 position:absolute;
-padding:16px 32px;
-font-size:0.95rem;
-font-weight:500;
-letter-spacing:1px;
-text-transform:uppercase;
-color:white;
-background:linear-gradient(135deg, rgba(255,0,120,0.2), rgba(255,0,120,0.05));
+padding:14px 28px;
+background:rgba(255,255,255,0.08);
 border:1px solid rgba(255,255,255,0.2);
-border-radius:18px;
-backdrop-filter:blur(12px);
+border-radius:16px;
 cursor:pointer;
-transition:all .2s ease;
-box-shadow:
-0 0 20px rgba(255,0,120,0.3),
-inset 0 0 10px rgba(255,255,255,0.05);
+}
+
+/* Static buttons */
+.static-btn{
+margin-top:140px;
+padding:14px 32px;
+background:rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.2);
+border-radius:16px;
+cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- GOOD MORNING SCREEN -->
+<!-- SCREEN 1 -->
 <div id="screen1" class="screen active">
 <h1>Buenos días, hermosa 💖</h1>
 <p>Tap anywhere to continue</p>
 </div>
 
-<!-- RANDOM THOUGHT SCREEN -->
+<!-- SCREEN 2 -->
 <div id="screen2" class="screen">
 <h2>Random thought... 🤔</h2>
 <p>Let's watch a movie online together?</p>
+
 <button id="noBtn" class="alt-btn">
 Nah, I'm cool on that
+</button>
+
+<button id="yesBtn" class="static-btn">
+Yess
+</button>
+</div>
+
+<!-- SCREEN 3 -->
+<div id="screen3" class="screen">
+<h2>Perfect,</h2>
+<p>
+Amma pick u up (virtually, ofc), later this evening @ 7:50 p.m. (2/22/2026)
+</p>
+
+<button class="static-btn">
+Im not sure, if ill be available at that specific time
 </button>
 </div>
 
 <script>
-let currentScreen = 1;
-
-/* Transition screens */
-document.addEventListener("pointerdown", function(e){
-if(currentScreen === 1){
-document.getElementById("screen1").classList.remove("active");
-document.getElementById("screen2").classList.add("active");
-currentScreen = 2;
-
-/* Center button initially */
+const screen1 = document.getElementById("screen1");
+const screen2 = document.getElementById("screen2");
+const screen3 = document.getElementById("screen3");
 const btn = document.getElementById("noBtn");
-btn.style.left = "50%";
-btn.style.top = "70%";
-btn.style.transform = "translate(-50%, -50%)";
+const yesBtn = document.getElementById("yesBtn");
+
+/* SCREEN 1 → SCREEN 2 */
+document.addEventListener("pointerdown", function(e){
+if(screen1.classList.contains("active")){
+screen1.classList.remove("active");
+screen2.classList.add("active");
+centerButton();
 }
 });
 
-/* Random move logic */
-const btn = document.getElementById("noBtn");
-const screen2 = document.getElementById("screen2");
+/* YES → SCREEN 3 */
+yesBtn.addEventListener("pointerdown", function(e){
+e.stopPropagation();
+screen2.classList.remove("active");
+screen3.classList.add("active");
+});
 
+/* Center moving button */
+function centerButton(){
+btn.style.left = (screen2.clientWidth/2 - btn.offsetWidth/2) + "px";
+btn.style.top = (screen2.clientHeight*0.65) + "px";
+}
+
+/* Move button randomly */
 function moveButton(e){
 e.stopPropagation();
 
-const rect = screen2.getBoundingClientRect();
-const btnRect = btn.getBoundingClientRect();
+const maxX = screen2.clientWidth - btn.offsetWidth;
+const maxY = screen2.clientHeight - btn.offsetHeight;
 
-const maxX = rect.width - btnRect.width;
-const maxY = rect.height - btnRect.height;
-
-btn.style.transform = "none";
 btn.style.left = Math.random() * maxX + "px";
 btn.style.top = Math.random() * maxY + "px";
 }
 
-/* Universal input */
 btn.addEventListener("pointerdown", moveButton);
 </script>
 
