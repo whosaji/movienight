@@ -22,7 +22,6 @@ position:relative;
 user-select:text;
 }
 
-/* Glow background */
 body::before{
 content:"";
 position:absolute;
@@ -86,7 +85,6 @@ cursor:pointer;
 color:white;
 }
 
-/* Button area for Screen 2 */
 .button-area{
 position:relative;
 width:100%;
@@ -97,9 +95,15 @@ align-items:center;
 justify-content:flex-start;
 }
 
-/* Moving button */
 .alt-btn{
 position:absolute;
+}
+
+input{
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:10px;
 }
 </style>
 </head>
@@ -116,7 +120,6 @@ position:absolute;
 <div id="screen2" class="screen">
 <h2>Random thought... 🤔</h2>
 <p>Let's watch a movie online together?</p>
-
 <div class="button-area">
 <button id="noBtn" class="alt-btn">Nah, I'm cool on that</button>
 <button id="yesBtn" style="margin-top:150px;">Yess</button>
@@ -126,18 +129,24 @@ position:absolute;
 <!-- SCREEN 3 -->
 <div id="screen3" class="screen">
 <h2>Perfect,</h2>
-<p>
-Amma pick u up (virtually, ofc), later this evening @ 7:50 p.m.
-</p>
+<p>Amma pick u up (virtually, ofc), later this evening @ 7:50 p.m.</p>
+<button id="confirmBtn">That time works for me</button>
 <button id="maybeBtn">
 Im not sure, if ill be available at that specific time
 </button>
 </div>
 
+<!-- NEW SCREEN: Favorite Brand -->
+<div id="brandScreen" class="screen">
+<h2>What’s your favorite brand?</h2>
+<input type="text" id="brandInput" placeholder="Enter favorite brand">
+<button id="brandSubmitBtn">Submit</button>
+</div>
+
 <!-- SCREEN 4 -->
 <div id="screen4" class="screen">
 <h2>Enter a more optimal time ur available today</h2>
-<input type="text" id="timeInput" placeholder="Enter time here" style="padding:10px;border-radius:8px;border:none;">
+<input type="text" placeholder="Enter time here">
 <button id="submitTimeBtn">Submit</button>
 <button id="notAvailableBtn">
 im not sure if im available at all today
@@ -146,14 +155,20 @@ im not sure if im available at all today
 
 <!-- SCREEN 5 -->
 <div id="screen5" class="screen">
-<h2>Please select a day your available</h2>
-<input type="text" id="dayInput" placeholder="Enter day" style="padding:10px;border-radius:8px;border:none;">
-<input type="text" id="specificTimeInput" placeholder="Enter specific time" style="padding:10px;border-radius:8px;border:none;margin-top:10px;">
-<button id="finalSubmitBtn">Submit</button>
+<h2>What is your favorite color?</h2>
+<input type="text" placeholder="Enter favorite color">
+<button id="colorSubmitBtn">Submit</button>
+</div>
+
+<!-- SCREEN 6 -->
+<div id="screen6" class="screen">
+<h2>Who is your favorite artist?</h2>
+<input type="text" placeholder="Enter favorite artist">
+<button id="artistSubmitBtn">Submit</button>
 </div>
 
 <!-- FINAL SCREEN -->
-<div id="screen6" class="screen">
+<div id="finalScreen" class="screen">
 <h1>im super excited 💖</h1>
 </div>
 
@@ -161,15 +176,20 @@ im not sure if im available at all today
 const screen1 = document.getElementById("screen1");
 const screen2 = document.getElementById("screen2");
 const screen3 = document.getElementById("screen3");
+const brandScreen = document.getElementById("brandScreen");
 const screen4 = document.getElementById("screen4");
 const screen5 = document.getElementById("screen5");
 const screen6 = document.getElementById("screen6");
+const finalScreen = document.getElementById("finalScreen");
 
 const yesBtn = document.getElementById("yesBtn");
+const confirmBtn = document.getElementById("confirmBtn");
 const maybeBtn = document.getElementById("maybeBtn");
-const notAvailableBtn = document.getElementById("notAvailableBtn");
+const brandSubmitBtn = document.getElementById("brandSubmitBtn");
 const submitTimeBtn = document.getElementById("submitTimeBtn");
-const finalSubmitBtn = document.getElementById("finalSubmitBtn");
+const notAvailableBtn = document.getElementById("notAvailableBtn");
+const colorSubmitBtn = document.getElementById("colorSubmitBtn");
+const artistSubmitBtn = document.getElementById("artistSubmitBtn");
 const noBtn = document.getElementById("noBtn");
 
 /* SCREEN 1 → SCREEN 2 */
@@ -185,28 +205,45 @@ screen2.classList.remove("active");
 screen3.classList.add("active");
 });
 
+/* CONFIRM → BRAND SCREEN */
+confirmBtn.addEventListener("click", function(){
+screen3.classList.remove("active");
+brandScreen.classList.add("active");
+});
+
+/* BRAND SUBMIT → FINAL */
+brandSubmitBtn.addEventListener("click", function(){
+brandScreen.classList.remove("active");
+finalScreen.classList.add("active");
+});
+
 /* MAYBE → SCREEN 4 */
 maybeBtn.addEventListener("click", function(){
 screen3.classList.remove("active");
 screen4.classList.add("active");
 });
 
-/* SUBMIT TIME → SCREEN 5 */
+/* SCREEN 4 */
 submitTimeBtn.addEventListener("click", function(){
 screen4.classList.remove("active");
 screen5.classList.add("active");
 });
 
-/* NOT AVAILABLE → SCREEN 5 */
 notAvailableBtn.addEventListener("click", function(){
 screen4.classList.remove("active");
-screen5.classList.add("active");
+screen6.classList.add("active");
 });
 
-/* FINAL SUBMIT → SCREEN 6 */
-finalSubmitBtn.addEventListener("click", function(){
+/* SCREEN 5 → FINAL */
+colorSubmitBtn.addEventListener("click", function(){
 screen5.classList.remove("active");
-screen6.classList.add("active");
+finalScreen.classList.add("active");
+});
+
+/* SCREEN 6 → FINAL */
+artistSubmitBtn.addEventListener("click", function(){
+screen6.classList.remove("active");
+finalScreen.classList.add("active");
 });
 
 /* Moving NO button */
