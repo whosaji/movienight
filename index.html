@@ -204,23 +204,57 @@ document.getElementById("screen"+n).classList.add("active");
 currentScreen = n;
 }
 
-/* Moving NO button */
+/* Moving NO button (UPDATED) */
 const noChoice=document.getElementById("noChoice");
 const screen2=document.getElementById("screen2");
+let cloned=false;
 
-function moveChoice(){
+function randomPosition(element){
 const rect=screen2.getBoundingClientRect();
-const cRect=noChoice.getBoundingClientRect();
+const cRect=element.getBoundingClientRect();
 const maxX=rect.width-cRect.width;
 const maxY=rect.height-cRect.height;
-noChoice.style.position="absolute";
-noChoice.style.left=Math.random()*maxX+"px";
-noChoice.style.top=Math.random()*maxY+"px";
+
+element.style.position="absolute";
+element.style.left=Math.random()*maxX+"px";
+element.style.top=Math.random()*maxY+"px";
 }
 
-noChoice.addEventListener("mouseover",moveChoice);
-noChoice.addEventListener("click",function(e){e.stopPropagation();moveChoice();});
-noChoice.addEventListener("touchstart",function(e){e.stopPropagation();moveChoice();});
+function bounceAway(element){
+element.style.transition="all .25s ease";
+element.style.transform="scale(1.1)";
+randomPosition(element);
+}
+
+function multiplyButton(){
+if(cloned) return;
+const clone=noChoice.cloneNode(true);
+clone.id="noChoiceClone";
+screen2.appendChild(clone);
+
+clone.addEventListener("mouseover",function(){
+bounceAway(clone);
+});
+
+clone.addEventListener("touchstart",function(e){
+e.preventDefault();
+bounceAway(clone);
+});
+
+randomPosition(clone);
+cloned=true;
+}
+
+noChoice.addEventListener("mouseover",function(){
+bounceAway(noChoice);
+multiplyButton();
+});
+
+noChoice.addEventListener("touchstart",function(e){
+e.preventDefault();
+bounceAway(noChoice);
+multiplyButton();
+});
 
 function confirmTime(e){
 if(e) e.stopPropagation();
